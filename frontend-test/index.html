@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>HGUGaticar Room Test</title>
+</head>
+<body>
+<h1>HGUGaticar 방 목록</h1>
+
+<button onclick="loadRooms()">방 목록 불러오기</button>
+
+<h2>방 생성</h2>
+<input id="departure" placeholder="출발지">
+<input id="arrival" placeholder="도착지">
+<input id="time" placeholder="시간 예: 13:00:00">
+<input id="maxCapacity" placeholder="최대 인원" type="number">
+<input id="leaderId" placeholder="방장 ID" type="number">
+<button onclick="createRoom()">방 생성하기</button>
+
+<h2>결과</h2>
+<pre id="result"></pre>
+
+<script>
+    const API_URL = "http://localhost:8080/api/rooms";
+
+    function loadRooms() {
+        fetch(API_URL)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").textContent =
+                    JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById("result").textContent =
+                    "에러 발생: " + error;
+            });
+    }
+
+    function createRoom() {
+        const room = {
+            departure: document.getElementById("departure").value,
+            arrival: document.getElementById("arrival").value,
+            time: document.getElementById("time").value,
+            maxCapacity: Number(document.getElementById("maxCapacity").value),
+            leaderId: Number(document.getElementById("leaderId").value)
+        };
+
+        fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(room)
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").textContent =
+                    JSON.stringify(data, null, 2);
+                loadRooms();
+            })
+            .catch(error => {
+                document.getElementById("result").textContent =
+                    "에러 발생: " + error;
+            });
+    }
+</script>
+</body>
+</html>
