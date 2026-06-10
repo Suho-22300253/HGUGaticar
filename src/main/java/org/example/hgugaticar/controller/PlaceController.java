@@ -24,3 +24,5 @@ public class PlaceController {
         return placeService.createPlace(place);
     }
 }
+
+// just for commit
